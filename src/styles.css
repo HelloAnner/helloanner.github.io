@@ -318,6 +318,8 @@ a {
   z-index: 3;
   width: 42%;
   transform: translateY(-50%);
+  /* 提高不透明度，避免树枝线条穿透卡片 */
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .tree-card.left {
@@ -331,6 +333,7 @@ a {
 .tree-card:hover,
 .tree-card.active {
   transform: translateY(calc(-50% - 3px));
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .milestone-header {
