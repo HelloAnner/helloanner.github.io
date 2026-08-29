@@ -7,7 +7,7 @@
 
   --glass-bg: rgba(255, 255, 255, 0.62);
   --glass-border: rgba(255, 255, 255, 0.85);
-  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
+  --glass-shadow: 0 2px 12px rgba(31, 38, 135, 0.05);
 
   --text-primary: #1e293b;
   --text-secondary: #475569;
@@ -60,7 +60,7 @@ a {
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 1.5rem 2rem 5rem;
+  padding: 1.5rem 2rem 3rem;
 }
 
 .content-narrow {
@@ -83,7 +83,7 @@ a {
   z-index: 100;
   margin-bottom: 2rem;
   padding-top: 1rem;
-  transition: transform 0.35s ease, opacity 0.35s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .site-header.hidden {
@@ -109,7 +109,8 @@ a {
 .nav-links {
   display: flex;
   gap: 1.25rem;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
   color: var(--text-secondary);
 }
 
@@ -123,16 +124,16 @@ a {
   grid-template-columns: 1.1fr 1fr;
   gap: 3rem;
   align-items: center;
-  min-height: calc(100vh - 6rem);
-  margin-bottom: 3rem;
+  padding-block: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .hero-content h1 {
   font-size: clamp(2.25rem, 5vw, 4rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.03em;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .hero-content h1 span {
@@ -143,17 +144,17 @@ a {
 }
 
 .hero-content .tagline {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   color: var(--text-secondary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   font-weight: 500;
 }
 
 .hero-content .bio {
   color: var(--text-muted);
   max-width: 480px;
-  font-size: 1rem;
-  margin-bottom: 2rem;
+  font-size: 0.9375rem;
+  margin-bottom: 1.5rem;
 }
 
 .hero-visual {
@@ -176,11 +177,21 @@ a {
 
 /* Section common */
 .section {
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
 }
 
 .section-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
 }
 
 .section-header h2 {
@@ -192,7 +203,7 @@ a {
 
 .section-header p {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.9375rem;
   max-width: var(--content-width);
 }
 
@@ -219,7 +230,6 @@ a {
 .link-pill:hover {
   background: rgba(255, 255, 255, 0.85);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.12);
   color: var(--accent);
 }
 
@@ -232,8 +242,8 @@ a {
 .tree-timeline {
   position: relative;
   width: 100%;
-  aspect-ratio: 1000 / 1850;
-  margin-top: 2rem;
+  aspect-ratio: 1000 / 1420;
+  margin-top: 1.5rem;
 }
 
 .tree-svg {
@@ -308,10 +318,6 @@ a {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.milestone-card:hover,
-.milestone-card.active {
-  box-shadow: 0 12px 32px rgba(31, 38, 135, 0.12);
-}
 
 .tree-card {
   position: absolute;
