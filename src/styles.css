@@ -17,9 +17,10 @@
   --accent-warm: #f472b6;
   --accent-mint: #34d399;
 
-  --radius: 24px;
-  --radius-sm: 16px;
-  --max-width: 880px;
+  --radius: 28px;
+  --radius-sm: 18px;
+  --max-width: 1400px;
+  --content-width: 720px;
 
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -59,7 +60,11 @@ a {
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 4rem 1.5rem 6rem;
+  padding: 2rem 3rem 6rem;
+}
+
+.content-narrow {
+  max-width: var(--content-width);
 }
 
 .glass {
@@ -106,18 +111,19 @@ a {
 /* Hero */
 .hero {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 3rem;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4rem;
   align-items: center;
-  margin-bottom: 5rem;
+  min-height: calc(100vh - 8rem);
+  margin-bottom: 4rem;
 }
 
 .hero-content h1 {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.25rem;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
 }
 
 .hero-content h1 span {
@@ -128,16 +134,17 @@ a {
 }
 
 .hero-content .tagline {
-  font-size: 1.25rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   color: var(--text-secondary);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   font-weight: 500;
 }
 
 .hero-content .bio {
   color: var(--text-muted);
-  max-width: 460px;
-  margin-bottom: 2rem;
+  max-width: 540px;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  margin-bottom: 2.5rem;
 }
 
 .hero-visual {
@@ -148,28 +155,30 @@ a {
 
 .hero-visual svg {
   width: 100%;
-  max-width: 320px;
+  max-width: 520px;
   height: auto;
 }
 
 /* Section common */
 .section {
-  margin-bottom: 5rem;
+  margin-bottom: 7rem;
 }
 
 .section-header {
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 .section-header h2 {
-  font-size: 1.75rem;
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
 }
 
 .section-header p {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  max-width: var(--content-width);
 }
 
 /* Links */
@@ -207,15 +216,15 @@ a {
 /* Timeline */
 .timeline {
   position: relative;
-  padding-left: 2rem;
+  padding-left: 2.5rem;
 }
 
 .timeline::before {
   content: "";
   position: absolute;
-  left: 6px;
-  top: 0.5rem;
-  bottom: 0.5rem;
+  left: 8px;
+  top: 0.75rem;
+  bottom: 0.75rem;
   width: 2px;
   background: linear-gradient(to bottom, var(--accent-warm), var(--accent), var(--accent-mint));
   border-radius: 2px;
@@ -223,7 +232,7 @@ a {
 
 .timeline-item {
   position: relative;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .timeline-item:last-child {
@@ -232,46 +241,47 @@ a {
 
 .timeline-dot {
   position: absolute;
-  left: -2rem;
-  top: 0.4rem;
-  width: 14px;
-  height: 14px;
+  left: -2.5rem;
+  top: 0.6rem;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #fff;
   border: 3px solid var(--accent);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.1);
 }
 
 .timeline-content {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .timeline-content h3 {
-  font-size: 1.125rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.375rem;
 }
 
 .timeline-content .meta {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--text-muted);
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .timeline-content p {
   color: var(--text-secondary);
-  font-size: 0.9375rem;
+  font-size: 1rem;
+  max-width: 800px;
 }
 
 /* Portfolio */
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
 }
 
 .portfolio-card {
-  padding: 1.75rem;
+  padding: 2rem;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -298,14 +308,14 @@ a {
 }
 
 .portfolio-card h3 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.375rem;
+  margin-bottom: 0.5rem;
 }
 
 .portfolio-card p {
   color: var(--text-muted);
-  font-size: 0.9375rem;
+  font-size: 1rem;
 }
 
 .portfolio-card .badge {
@@ -330,15 +340,16 @@ a {
 }
 
 /* Responsive */
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .container {
-    padding: 2rem 1rem 4rem;
+    padding: 2rem 1.5rem 4rem;
   }
 
   .hero {
     grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-bottom: 3.5rem;
+    gap: 2.5rem;
+    min-height: auto;
+    margin-bottom: 4rem;
   }
 
   .hero-visual {
@@ -346,18 +357,39 @@ a {
   }
 
   .hero-visual svg {
-    max-width: 220px;
+    max-width: 280px;
   }
 
   .nav-links {
     display: none;
   }
 
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 2rem 1rem 4rem;
+  }
+
+  .hero-visual svg {
+    max-width: 220px;
+  }
+
   .timeline {
-    padding-left: 1.5rem;
+    padding-left: 1.75rem;
   }
 
   .timeline-dot {
-    left: -1.5rem;
+    left: -1.75rem;
+    width: 14px;
+    height: 14px;
+  }
+
+  .timeline-content {
+    padding: 1.5rem;
   }
 }
