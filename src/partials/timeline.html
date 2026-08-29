@@ -1,32 +1,158 @@
 <section class="section" id="experience">
   <div class="section-header">
-    <h2>经历</h2>
-    <p>过去几年的工作与学习轨迹。</p>
+    <h2>我的轨迹</h2>
+    <p>2020 年加入帆软，从后端模块研发到 AI Agent 平台，六年间的角色与输出。</p>
   </div>
-  <div class="timeline">
-    <article class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-content glass">
-        <h3>高级软件工程师</h3>
-        <div class="meta">某科技公司 · 2023 – 至今</div>
-        <p>负责核心产品架构设计与性能优化，带领小团队完成多个关键模块，从 0 到 1 推动基础设施升级。</p>
-      </div>
-    </article>
-    <article class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-content glass">
-        <h3>全栈开发工程师</h3>
-        <div class="meta">创业公司 · 2020 – 2023</div>
-        <p>参与产品全生命周期，负责前端交互、后端 API 与数据 pipeline，支持用户规模从千级增长到十万级。</p>
-      </div>
-    </article>
-    <article class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-content glass">
-        <h3>计算机科学硕士</h3>
-        <div class="meta">某大学 · 2017 – 2020</div>
-        <p>研究方向为分布式系统与机器学习工程，发表相关论文并参与开源项目贡献。</p>
-      </div>
-    </article>
+
+  <div class="journey-timeline">
+    <svg class="journey-svg" viewBox="0 0 1000 320" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="journeyPath" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#f472b6" />
+          <stop offset="50%" stop-color="#6366f1" />
+          <stop offset="100%" stop-color="#34d399" />
+        </linearGradient>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <!-- 流动主路径 -->
+      <path class="journey-path" d="M 50 180 C 130 180, 140 120, 200 120 C 270 120, 280 220, 350 220 C 420 220, 430 140, 500 140 C 570 140, 580 220, 650 220 C 720 220, 730 120, 800 120 C 870 120, 880 180, 950 180" fill="none" stroke="url(#journeyPath)" stroke-width="3" stroke-linecap="round" />
+      <!-- 装饰性细线 -->
+      <path class="journey-path-soft" d="M 50 180 C 130 180, 140 120, 200 120 C 270 120, 280 220, 350 220 C 420 220, 430 140, 500 140 C 570 140, 580 220, 650 220 C 720 220, 730 120, 800 120 C 870 120, 880 180, 950 180" fill="none" stroke="url(#journeyPath)" stroke-width="12" stroke-opacity="0.12" stroke-linecap="round" />
+      <!-- 节点外环 -->
+      <circle cx="50" cy="180" r="10" fill="#fff" stroke="#f472b6" stroke-width="3" />
+      <circle cx="200" cy="120" r="10" fill="#fff" stroke="#f472b6" stroke-width="3" />
+      <circle cx="350" cy="220" r="10" fill="#fff" stroke="#818cf8" stroke-width="3" />
+      <circle cx="500" cy="140" r="10" fill="#fff" stroke="#6366f1" stroke-width="3" />
+      <circle cx="650" cy="220" r="10" fill="#fff" stroke="#6366f1" stroke-width="3" />
+      <circle cx="800" cy="120" r="10" fill="#fff" stroke="#34d399" stroke-width="3" />
+      <circle cx="950" cy="180" r="10" fill="#fff" stroke="#34d399" stroke-width="3" />
+    </svg>
+
+    <div class="journey-nodes">
+      <!-- 2020 -->
+      <article class="journey-node" style="left: 5%; top: 56%;">
+        <div class="node-ring"></div>
+        <div class="node-core"></div>
+        <div class="node-year">2020</div>
+        <div class="node-label">起点</div>
+        <div class="node-card">
+          <h3>2020 · 入职帆软</h3>
+          <p class="node-role">后端研发工程师 · 帆软软件有限公司</p>
+          <ul>
+            <li>加入 FineReport/FineBI 平台研发团队</li>
+            <li>负责用户、权限、定时调度等核心后端模块</li>
+            <li>快速熟悉企业级报表平台业务与技术栈</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2021 -->
+      <article class="journey-node" style="left: 20%; top: 37.5%;">
+        <div class="node-ring"></div>
+        <div class="node-core"></div>
+        <div class="node-year">2021</div>
+        <div class="node-label">深耕</div>
+        <div class="node-card">
+          <h3>2021 · 模块 Owner</h3>
+          <p class="node-role">后端研发工程师 · 帆软软件有限公司</p>
+          <ul>
+            <li>独立负责用户、权限、定时调度模块迭代</li>
+            <li>完成多域 LDAP、权限数据变化监听等专项</li>
+            <li>建立客户问题响应与模块稳定性保障机制</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2022 -->
+      <article class="journey-node" style="left: 35%; top: 68.75%;">
+        <div class="node-ring"></div>
+        <div class="node-core"></div>
+        <div class="node-year">2022</div>
+        <div class="node-label">扩展</div>
+        <div class="node-card">
+          <h3>2022 · 技术升级</h3>
+          <p class="node-role">后端研发工程师 · 帆软软件有限公司</p>
+          <ul>
+            <li>参与迭代排期管理与研发任务池搭建</li>
+            <li>推动 JDK21 适配等技术升级专项</li>
+            <li>沉淀模块文档与问题排查 SOP</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2023 -->
+      <article class="journey-node" style="left: 50%; top: 43.75%;">
+        <div class="node-ring"></div>
+        <div class="node-core"></div>
+        <div class="node-year">2023</div>
+        <div class="node-label">性能</div>
+        <div class="node-card">
+          <h3>2023 · 性能治理</h3>
+          <p class="node-role">核心开发 · 帆软软件有限公司</p>
+          <ul>
+            <li>主导平台 Top 性能场景专项治理</li>
+            <li>解决 Redis 大 key、复杂 SQL、IN 参数、LDAP 登录性能等问题</li>
+            <li>建立本地压测与数据验证机制</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2024 -->
+      <article class="journey-node" style="left: 65%; top: 68.75%;">
+        <div class="node-ring"></div>
+        <div class="node-core"></div>
+        <div class="node-year">2024</div>
+        <div class="node-label">效能</div>
+        <div class="node-card">
+          <h3>2024 · AI 提效</h3>
+          <p class="node-role">设计 / 核心开发 · 帆软软件有限公司</p>
+          <ul>
+            <li>设计并落地 JiraAIFlow 客户问题 AI 分析工具</li>
+            <li>实现 Tag Flow 自动标签流转与质效可视化</li>
+            <li>输出 KMS 发布、周会提醒、外置库评测等自动化能力</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2025 -->
+      <article class="journey-node" style="left: 80%; top: 37.5%;">
+        <div class="node-ring"></div>
+        <div class="node-core"></div>
+        <div class="node-year">2025</div>
+        <div class="node-label">AI 转型</div>
+        <div class="node-card">
+          <h3>2025 · AI 应用落地</h3>
+          <p class="node-role">核心开发 · 帆软软件有限公司</p>
+          <ul>
+            <li>设计器公式/JS 智能助手：准确率 4.7/5，系统错误率 1.0%</li>
+            <li>报表资产向量检索与智能问数：Embedding + Lucene 混合检索</li>
+            <li>企业客户问题知识库：RAG + KG 融合检索与 Fine Wiki 接口</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2026 -->
+      <article class="journey-node" style="left: 95%; top: 56%;">
+        <div class="node-ring"></div>
+        <div class="node-core"></div>
+        <div class="node-year">2026</div>
+        <div class="node-label">Agent 平台</div>
+        <div class="node-card">
+          <h3>2026 · Agent 平台</h3>
+          <p class="node-role">核心开发 / Agent 内核与平台工程化 · 帆软软件有限公司</p>
+          <ul>
+            <li>Moss/Corevo 企业级 Agent 平台内核架构与无状态化改造</li>
+            <li>Tool/Skill/子 Agent 扩展体系与 MCP 集成</li>
+            <li>Northline 智能问数三角色 Master Agent 与 Text-to-SQL 链路</li>
+          </ul>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
