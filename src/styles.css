@@ -228,215 +228,120 @@ a {
   height: 16px;
 }
 
-/* Journey Timeline */
-.journey-timeline {
+/* Tree Timeline */
+.tree-timeline {
   position: relative;
   width: 100%;
-  min-height: 420px;
+  height: 2200px;
   margin-top: 2rem;
+  overflow-x: visible;
 }
 
-.journey-svg {
+.tree-svg {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   overflow: visible;
 }
 
-.journey-path {
-  filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.25));
+.tree-nodes {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.journey-nodes {
+.tree-year {
   position: absolute;
-  inset: 0;
-}
-
-.journey-node {
-  position: absolute;
+  left: 50%;
   transform: translate(-50%, -50%);
-  width: 110px;
-  text-align: center;
+  z-index: 5;
+}
+
+.year-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+}
+
+.milestone-card {
+  position: absolute;
+  width: 38%;
+  max-width: 420px;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 }
 
-.journey-node .node-ring {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, -50%);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  border: 2px solid var(--accent);
-  box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.08);
-  transition: all 0.3s ease;
+.milestone-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(31, 38, 135, 0.1);
 }
 
-.journey-node .node-core {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--accent);
-  transition: all 0.3s ease;
+.milestone-card.right {
+  left: 55%;
+  transform: translateY(-50%);
 }
 
-.journey-node .node-year {
-  margin-top: 18px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--text-primary);
+.milestone-card.left {
+  right: 55%;
+  transform: translateY(-50%);
 }
 
-.journey-node .node-label {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin-top: 0.125rem;
+.milestone-card:hover {
+  transform: translateY(calc(-50% - 3px));
 }
 
-.journey-node .node-card {
-  position: absolute;
-  left: 50%;
-  bottom: 100%;
-  transform: translateX(-50%) translateY(12px);
-  width: 280px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
-  text-align: left;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
+.milestone-thumb {
+  flex: 0 0 100px;
+  width: 100px;
+  height: 70px;
   border-radius: var(--radius-sm);
-  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.12);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.25s ease;
-  pointer-events: none;
-  z-index: 20;
-}
-
-.journey-node:hover .node-card {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
-.journey-node:hover .node-ring {
-  transform: translate(-50%, -50%) scale(1.25);
-  box-shadow: 0 0 0 10px rgba(99, 102, 241, 0.12);
-}
-
-.journey-node:hover .node-core {
-  background: var(--accent-warm);
-}
-
-.node-card h3 {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-  color: var(--text-primary);
-}
-
-.node-card .node-role {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-  line-height: 1.5;
-}
-
-.node-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.node-card li {
-  position: relative;
-  padding-left: 0.875rem;
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 0.375rem;
-}
-
-.node-card li:last-child {
-  margin-bottom: 0;
-}
-
-.node-card li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55rem;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-/* Portfolio */
-.portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.portfolio-card {
-  padding: 1.5rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.portfolio-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.12);
-}
-
-.portfolio-card .thumb {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.45);
-  margin-bottom: 1.25rem;
+  background: rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
-.portfolio-card .thumb svg {
-  width: 80%;
-  height: 80%;
+.milestone-thumb svg {
+  width: 85%;
+  height: 85%;
 }
 
-.portfolio-card h3 {
-  font-size: 1.125rem;
+.milestone-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.milestone-body h3 {
+  font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 0.375rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
 }
 
-.portfolio-card p {
-  color: var(--text-muted);
-  font-size: 0.9375rem;
-}
-
-.portfolio-card .badge {
-  display: inline-block;
-  margin-top: 1rem;
+.milestone-body .milestone-meta {
   font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: rgba(99, 102, 241, 0.08);
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.milestone-body .milestone-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
 }
 
 /* Footer */
@@ -472,23 +377,26 @@ a {
     display: none;
   }
 
-  .journey-timeline {
-    min-height: 360px;
+  .tree-timeline {
     overflow-x: auto;
-    overflow-y: visible;
     -webkit-overflow-scrolling: touch;
   }
 
-  .journey-svg {
-    min-width: 860px;
+  .tree-svg,
+  .tree-nodes {
+    min-width: 760px;
   }
 
-  .journey-nodes {
-    min-width: 860px;
+  .milestone-card {
+    width: 42%;
   }
 
-  .journey-node .node-card {
-    width: 240px;
+  .milestone-card.right {
+    left: 54%;
+  }
+
+  .milestone-card.left {
+    right: 54%;
   }
 }
 
@@ -501,20 +409,29 @@ a {
     max-width: 220px;
   }
 
-  .journey-node {
-    width: 90px;
+  .tree-svg,
+  .tree-nodes {
+    min-width: 680px;
   }
 
-  .journey-node .node-year {
+  .milestone-card {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 44%;
+    padding: 0.875rem;
+  }
+
+  .milestone-thumb {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 60px;
+  }
+
+  .milestone-body h3 {
+    font-size: 0.9375rem;
+  }
+
+  .milestone-body .milestone-desc {
     font-size: 0.8125rem;
-  }
-
-  .journey-node .node-label {
-    font-size: 0.75rem;
-  }
-
-  .journey-node .node-card {
-    width: 220px;
-    padding: 0.875rem 1rem;
   }
 }
