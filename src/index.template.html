@@ -5,10 +5,35 @@
   <div class="container">
     {{PARTIAL:header}}
     {{PARTIAL:hero}}
-    {{PARTIAL:links}}
     {{PARTIAL:timeline}}
     {{PARTIAL:portfolio}}
     {{PARTIAL:footer}}
   </div>
+  <script>
+    (function () {
+      const header = document.querySelector('.site-header');
+      if (!header) return;
+      let lastY = window.scrollY;
+      let ticking = false;
+
+      function updateHeader() {
+        const currentY = window.scrollY;
+        if (currentY > 80 && currentY > lastY) {
+          header.classList.add('hidden');
+        } else {
+          header.classList.remove('hidden');
+        }
+        lastY = currentY;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          window.requestAnimationFrame(updateHeader);
+          ticking = true;
+        }
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>
