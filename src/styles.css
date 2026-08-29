@@ -316,18 +316,18 @@ a {
 .tree-card {
   position: absolute;
   z-index: 3;
-  width: 42%;
+  width: 34%;
   transform: translateY(-50%);
-  /* 提高不透明度，避免树枝线条穿透卡片 */
+  /* 提高不透明度，让树枝端点停在卡片边缘 */
   background: rgba(255, 255, 255, 0.88);
 }
 
 .tree-card.left {
-  left: 2%;
+  left: 3%;
 }
 
 .tree-card.right {
-  right: 2%;
+  right: 3%;
 }
 
 .tree-card:hover,
@@ -428,15 +428,15 @@ a {
   }
 
   .tree-card {
-    width: 46%;
+    width: 34%;
   }
 
   .tree-card.left {
-    left: 1%;
+    left: 3%;
   }
 
   .tree-card.right {
-    right: 1%;
+    right: 3%;
   }
 
   .milestone-card {
