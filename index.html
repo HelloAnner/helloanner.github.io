@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anner · 个人主页</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 640px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--bg);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--accent);
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+
+    .links a:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div class="avatar">A</div>
+    <h1>Hello, I'm Anner</h1>
+    <p class="subtitle">正在构建我的个人主页</p>
+
+    <section class="card">
+      <h2>关于这个站点</h2>
+      <p>这是一个基于 GitHub Pages 的静态个人主页，仓库名为 <code>helloanner.github.io</code>。页面源码就是普通 HTML + CSS，后续可以在这里扩展博客、作品集或更多内容。</p>
+      <p>如果你能看到这个页面，说明 GitHub Pages 的部署流程已经跑通了。</p>
+    </section>
+
+    <section class="card">
+      <h2>接下来可以做什么</h2>
+      <p>• 把首页换成真正的个人介绍</p>
+      <p>• 添加文章/博客列表页</p>
+      <p>• 接入自定义域名（可选）</p>
+      <p>• 使用静态站点生成器（如 Hugo / Jekyll / Astro）</p>
+    </section>
+
+    <nav class="links">
+      <a href="https://github.com/HelloAnner" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:" onclick="alert('请把链接里的 mailto: 替换为你的邮箱')">Email</a>
+    </nav>
+
+    <footer>
+      © 2026 Anner. Hosted on GitHub Pages.
+    </footer>
+  </main>
+</body>
+</html>
