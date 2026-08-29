@@ -231,82 +231,136 @@ a {
 /* Tree Timeline */
 .tree-timeline {
   position: relative;
-  width: 100%;
-  height: 2200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
   margin-top: 2rem;
-  overflow-x: visible;
+  padding: 1rem 0;
 }
 
-.tree-svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.tree-nodes {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.tree-year {
+.tree-spine {
   position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  transform: translateX(-50%);
+  z-index: 0;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, #34d399 0%, #6366f1 35%, #818cf8 70%, #f472b6 100%);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
 }
 
-.year-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.7);
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(8px);
+.year-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  position: relative;
+  z-index: 1;
+}
+
+.year-row.right .cards-col {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.year-row.right .year-node {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.year-row.left .cards-col {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.year-row.left .year-node {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.year-node {
+  justify-self: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 2px solid var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--accent);
+  box-shadow: 0 0 0 10px rgba(99, 102, 241, 0.08), 0 4px 16px rgba(99, 102, 241, 0.1);
+}
+
+.cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .milestone-card {
-  position: absolute;
-  width: 38%;
-  max-width: 420px;
-  padding: 1rem;
   display: flex;
   gap: 1rem;
-  align-items: flex-start;
+  padding: 1rem;
+  position: relative;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  cursor: pointer;
 }
 
 .milestone-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(31, 38, 135, 0.1);
+  box-shadow: 0 12px 32px rgba(31, 38, 135, 0.12);
 }
 
-.milestone-card.right {
-  left: 55%;
-  transform: translateY(-50%);
+.year-row.left .milestone-card::after,
+.year-row.right .milestone-card::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 2.5rem;
+  height: 2px;
+  margin-top: -1px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.55), rgba(99, 102, 241, 0.15));
 }
 
-.milestone-card.left {
-  right: 55%;
-  transform: translateY(-50%);
+.year-row.left .milestone-card::after {
+  right: -2.5rem;
 }
 
-.milestone-card:hover {
-  transform: translateY(calc(-50% - 3px));
+.year-row.right .milestone-card::after {
+  left: -2.5rem;
+  background: linear-gradient(270deg, rgba(99, 102, 241, 0.55), rgba(99, 102, 241, 0.15));
+}
+
+.year-row.left .milestone-card::before,
+.year-row.right .milestone-card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.year-row.left .milestone-card::before {
+  right: calc(-2.5rem - 5px);
+}
+
+.year-row.right .milestone-card::before {
+  left: calc(-2.5rem - 5px);
 }
 
 .milestone-thumb {
-  flex: 0 0 100px;
-  width: 100px;
-  height: 70px;
+  flex: 0 0 90px;
+  width: 90px;
+  height: 64px;
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.5);
   display: flex;
@@ -326,7 +380,7 @@ a {
 }
 
 .milestone-body h3 {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
   color: var(--text-primary);
@@ -339,7 +393,7 @@ a {
 }
 
 .milestone-body .milestone-desc {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
   line-height: 1.55;
 }
@@ -378,25 +432,36 @@ a {
   }
 
   .tree-timeline {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    gap: 2rem;
   }
 
-  .tree-svg,
-  .tree-nodes {
-    min-width: 760px;
+  .year-row {
+    gap: 1.25rem;
+  }
+
+  .year-node {
+    width: 44px;
+    height: 44px;
+    font-size: 0.6875rem;
   }
 
   .milestone-card {
-    width: 42%;
+    gap: 0.75rem;
+    padding: 0.875rem;
   }
 
-  .milestone-card.right {
-    left: 54%;
+  .milestone-thumb {
+    flex: 0 0 72px;
+    width: 72px;
+    height: 52px;
   }
 
-  .milestone-card.left {
-    right: 54%;
+  .milestone-body h3 {
+    font-size: 0.875rem;
+  }
+
+  .milestone-body .milestone-desc {
+    font-size: 0.75rem;
   }
 }
 
@@ -409,29 +474,47 @@ a {
     max-width: 220px;
   }
 
-  .tree-svg,
-  .tree-nodes {
-    min-width: 680px;
+  .tree-timeline {
+    gap: 1.5rem;
   }
 
-  .milestone-card {
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 44%;
-    padding: 0.875rem;
+  .year-row {
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+  }
+
+  .year-row.left,
+  .year-row.right {
+    direction: ltr;
+  }
+
+  .year-row.left .cards-col,
+  .year-row.right .cards-col {
+    grid-column: 2;
+  }
+
+  .year-row.left .year-node,
+  .year-row.right .year-node {
+    grid-column: 1;
+  }
+
+  .year-node {
+    width: 40px;
+    height: 40px;
+  }
+
+  .tree-spine {
+    left: 20px;
   }
 
   .milestone-thumb {
-    flex: 0 0 auto;
-    width: 100%;
-    height: 60px;
+    flex: 0 0 64px;
+    width: 64px;
+    height: 48px;
   }
 
-  .milestone-body h3 {
-    font-size: 0.9375rem;
-  }
-
-  .milestone-body .milestone-desc {
-    font-size: 0.8125rem;
+  .year-row.left .milestone-card::before,
+  .year-row.right .milestone-card::before {
+    display: none;
   }
 }
