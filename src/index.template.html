@@ -2,37 +2,21 @@
 <html lang="zh-CN">
 {{PARTIAL:head}}
 <body>
-  <div class="container">
-    {{PARTIAL:header}}
-    {{PARTIAL:hero}}
-    {{PARTIAL:timeline}}
-    {{PARTIAL:footer}}
-  </div>
+  {{PARTIAL:hero}}
+  {{PARTIAL:timeline}}
+  {{PARTIAL:footer}}
   <script>
-    (function () {
-      const header = document.querySelector('.site-header');
-      if (!header) return;
-      let lastY = window.scrollY;
-      let ticking = false;
-
-      function updateHeader() {
-        const currentY = window.scrollY;
-        if (currentY > 80 && currentY > lastY) {
-          header.classList.add('hidden');
-        } else {
-          header.classList.remove('hidden');
-        }
-        lastY = currentY;
-        ticking = false;
-      }
-
-      window.addEventListener('scroll', function () {
-        if (!ticking) {
-          window.requestAnimationFrame(updateHeader);
-          ticking = true;
-        }
-      }, { passive: true });
-    })();
+    const archive = document.getElementById('archive');
+    function revealWork() {
+      if (archive.contains(document.getElementById(location.hash.slice(1)))) archive.open = true;
+    }
+    window.addEventListener('hashchange', revealWork);
+    revealWork();
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => {
+        if (archive.contains(document.getElementById(link.hash.slice(1)))) archive.open = true;
+      });
+    });
   </script>
 </body>
 </html>

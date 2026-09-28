@@ -13,13 +13,10 @@ Anner 的个人作品集站点。
 ├── src/
 │   ├── index.template.html    # 页面模板
 │   ├── styles.css             # 全局样式
-│   └── partials/              # HTML 片段
+│   └── partials/
 │       ├── head.html
-│       ├── header.html
 │       ├── hero.html
-│       ├── links.html
-│       ├── timeline.html
-│       ├── portfolio.html
+│       ├── timeline.html       # 作品画廊与经历
 │       └── footer.html
 ├── build.py                   # 本地构建脚本
 ├── .github/workflows/deploy.yml  # GitHub Actions 自动部署
@@ -40,6 +37,5 @@ python3 build.py
 
 ## 说明
 
-- 纯静态站点：HTML + CSS + 内联 SVG。
-- 不依赖任何 UI 库或外部字体 CDN。
+- 纯静态站点：HTML + CSS；标题使用 Google Fonts 提供的 La Belle Aurore。
 - 所有数据与外部笔记库隔离，全部保存在本仓库内。
