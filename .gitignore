@@ -15,3 +15,6 @@ dist/
 
 # Local preview assets
 .tmp/
+
+# CV 生成仓库：内容含个人联系信息，不进入作品集站的发布物
+cv/
