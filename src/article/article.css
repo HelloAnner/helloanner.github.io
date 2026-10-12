@@ -51,7 +51,7 @@ body {
 /* ---------- top bar (fixed, right-aligned nav) ---------- */
 .topbar { position:fixed; top:0; left:0; width:100%; height:48px; z-index:1100;
   background:var(--page); border-bottom:1px solid var(--rule); }
-.topbar .nav-container { max-width:1100px; margin:0 auto; height:100%;
+.topbar .nav-container { height:100%;
   display:flex; justify-content:flex-end; align-items:center; padding:0 30px; }
 .topbar .nav-links a { font-family:var(--font-head); font-size:14px; font-weight:600;
   margin-left:22px; color:var(--text-2); text-decoration:none; transition:color .15s; }
@@ -124,11 +124,8 @@ h1 { font-family:var(--font-head); font-size:38px; line-height:1.12;
    edge — while clearing the breakout figures. */
 .book-wrap { max-width:var(--maxw); margin:0 auto; padding:0 24px; }
 nav.book { margin:34px 0 8px; }
-.backlink { font-family:var(--font-head); font-size:13px; margin-bottom:16px; display:inline-block; color:var(--muted); }
-.backlink:hover { color:var(--accent); text-decoration:none; }
 nav.book .book-title { font-family:var(--font-head); font-size:15px; font-weight:730;
-  color:var(--text-1); letter-spacing:-0.01em; margin:0 0 3px; }
-nav.book .book-sub { font-family:var(--font-head); font-size:12.5px; color:var(--muted); margin:0 0 16px; }
+  color:var(--text-1); letter-spacing:-0.01em; margin:0 0 14px; }
 nav.book .toc-label { font-family:var(--font-head); font-size:11px; letter-spacing:.12em;
   text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:10px; }
 nav.book ol { list-style:none; margin:0; padding:0; }

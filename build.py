@@ -165,9 +165,7 @@ def build_book_nav(book: dict, chapters: list, current: dict, sections: list) ->
                      f'<a href="{chapter_file(book, ch)}">{html_lib.escape(ch["title"])}</a></li>')
     return f'''<div class="book-wrap">
   <nav class="book" aria-label="Book chapters">
-    <a class="backlink" href="../../index.html">← Portfolio</a>
     <p class="book-title">{html_lib.escape(book["title"])}</p>
-    <p class="book-sub">{html_lib.escape(book.get("sub", ""))}</p>
     <div class="toc-label">Chapters</div>
     <ol class="chapters">{"".join(items)}</ol>
   </nav>
