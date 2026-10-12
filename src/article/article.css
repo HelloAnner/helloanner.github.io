@@ -6,6 +6,7 @@
    in ONE place to re-typeset every article.
    ========================================================================= */
 :root {
+  color-scheme: light;
   /* --- type --- */
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-head: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -31,6 +32,7 @@
   --maxw-wide:1040px;  /* figures may break out to here */
 }
 :root.dark {
+  color-scheme: dark;
   --page:#0f1113;
   --text-1:#f0f2f4; --text-2:#c3c8cf; --muted:#8b9099;
   --rule:#23262b; --rule-2:#2e323a; --track:#3a3f47;
@@ -142,9 +144,57 @@ nav.book a:hover { color:var(--accent); text-decoration:none; }
 nav.book a.active { color:var(--text-1); font-weight:650; }
 nav.book li.current a { color:var(--text-1); font-weight:650; }
 nav.book li.current .n { color:var(--accent); }
-nav.book .rail-divider { border:none; border-top:1px solid var(--rule); margin:18px 0 14px; }
 /* narrow screens: chapter list in two columns like the reference TOC */
 nav.book ol.chapters { columns:2; column-gap:32px; }
+
+/* ---------- right rail: on-this-page TOC (collapsible) ----------
+   Narrow screens: inline block under the chapter list.
+   Wide screens: fixed right-margin rail, mirror of the chapter rail. */
+nav.page-toc { margin:16px 0 8px; border-top:1px solid var(--rule); padding-top:18px; }
+nav.page-toc .toc-head { display:flex; align-items:center; justify-content:space-between;
+  gap:10px; margin-bottom:10px; }
+nav.page-toc .toc-label { font-family:var(--font-head); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:700; }
+nav.page-toc .toc-toggle { display:inline-flex; align-items:center; justify-content:center;
+  width:22px; height:22px; flex:none; background:none; border:1px solid var(--rule-2);
+  border-radius:6px; color:var(--muted); cursor:pointer; padding:0;
+  transition:color .12s, border-color .12s; }
+nav.page-toc .toc-toggle:hover { color:var(--accent); border-color:var(--accent); }
+nav.page-toc .toc-toggle svg { width:12px; height:12px; stroke:currentColor; stroke-width:2.2;
+  fill:none; stroke-linecap:round; stroke-linejoin:round; transition:transform .15s; }
+nav.page-toc.collapsed .toc-toggle svg { transform:rotate(180deg); }
+nav.page-toc ol { list-style:none; margin:0; padding:0; columns:2; column-gap:32px; }
+nav.page-toc li { font-family:var(--font-head); font-size:14px; line-height:1.35; margin:0 0 9px;
+  break-inside:avoid; color:var(--text-2); display:flex; gap:8px; align-items:baseline; }
+nav.page-toc li .n { color:var(--muted); font-variant-numeric:tabular-nums; flex:none;
+  width:13px; text-align:right; }
+nav.page-toc a { color:var(--text-2); flex:1; transition:color .12s; }
+nav.page-toc a:hover { color:var(--accent); text-decoration:none; }
+nav.page-toc a.active { color:var(--text-1); font-weight:650; }
+nav.page-toc.collapsed .toc-head { margin-bottom:0; }
+nav.page-toc.collapsed .toc-label { display:none; }
+nav.page-toc.collapsed ol { display:none; }
+
+@media (min-width:1280px) {
+  nav.page-toc {
+    position:fixed; top:48px; z-index:70;
+    right:calc(50% - (var(--maxw) / 2) - var(--toc-gap) - var(--toc-w));
+    width:var(--toc-w); max-height:calc(100vh - 96px); overflow-y:auto;
+    margin:0; padding:44px 0 40px; border-top:none;
+  }
+  nav.page-toc ol { columns:1; }
+  /* active bar: border colored like the page when idle (see chapter rail) */
+  nav.page-toc li { margin:0 0 13px; padding-left:12px; border-left:2px solid var(--page);
+    transition:border-color .12s; }
+  nav.page-toc li:has(a.active) { border-left-color:var(--accent); }
+  nav.page-toc li:has(a.active) .n { color:var(--accent); }
+  nav.page-toc a.active { color:var(--accent); }
+  /* collapsed: shrink to a small pill hugging the viewport side */
+  nav.page-toc.collapsed { width:auto; }
+}
+@media (max-width:640px) {
+  nav.page-toc ol { columns:1; }
+}
 
 /* Wide screens (≥1280px): the rail is a fixed left-margin column anchored to
    the viewport CENTER (calc), so it hugs the centered reading column and
@@ -159,14 +209,16 @@ nav.book ol.chapters { columns:2; column-gap:32px; }
     margin:0; padding:44px 22px 40px 0;
   }
   nav.book ol.chapters { columns:1; }
-  /* active bar sits left of the number, spanning the whole (possibly wrapped) item */
-  nav.book li { margin:0 0 13px; padding-left:12px; border-left:2px solid transparent;
+  /* active bar sits left of the number, spanning the whole (possibly wrapped) item.
+     The idle border is solid var(--page), NOT transparent: transparent borders
+     painted as gray smudges under some compositing paths, while a solid
+     page-colored border is reliably invisible and layout-stable. */
+  nav.book li { margin:0 0 13px; padding-left:12px; border-left:2px solid var(--page);
     transition:border-color .12s; }
-  nav.book li.sub { margin-left:21px; margin-top:-6px; padding-left:12px; }
-  nav.book li:has(a.active) { border-left-color:var(--accent); }
+  nav.book li.sub { margin-left:21px; margin-top:-6px; }
+  nav.book li:has(a.active), nav.book li.current { border-left-color:var(--accent); }
   nav.book li:has(a.active) .n { color:var(--accent); }
   nav.book a.active { color:var(--accent); }
-  nav.book li.current { border-left-color:var(--accent); }
   nav.book li.current a { color:var(--accent); }
 }
 

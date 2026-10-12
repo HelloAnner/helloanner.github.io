@@ -1,14 +1,40 @@
 /* Shared article module behavior: theme toggle, back-to-top, TOC scroll-spy,
    code-block copy buttons. Loaded on every book/article page. */
 
-/* theme toggle — localStorage key "theme", .dark class on <html> */
+/* theme — follows the OS theme (prefers-color-scheme) by default and tracks
+   OS changes live; a manual toggle stores an override in localStorage "theme". */
 (() => {
   const root = document.documentElement;
-  if (localStorage.getItem("theme") === "dark") root.classList.add("dark");
+  const mq = matchMedia("(prefers-color-scheme: dark)");
+  const stored = localStorage.getItem("theme");
+  if (stored ? stored === "dark" : mq.matches) root.classList.add("dark");
+  mq.addEventListener("change", (e) => {
+    if (!localStorage.getItem("theme")) root.classList.toggle("dark", e.matches);
+  });
   const t = document.getElementById("theme-toggle");
   if (t) t.addEventListener("click", () => {
     root.classList.toggle("dark");
     localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
+  });
+})();
+
+/* page TOC: collapse / expand, state persisted across pages */
+(() => {
+  const nav = document.getElementById("page-toc-nav");
+  if (!nav) return;
+  const btn = nav.querySelector(".toc-toggle");
+  const sync = () => {
+    const collapsed = nav.classList.contains("collapsed");
+    btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    btn.setAttribute("aria-label", collapsed ? "Expand table of contents" : "Collapse table of contents");
+    btn.setAttribute("title", collapsed ? "Expand table of contents" : "Collapse table of contents");
+  };
+  if (localStorage.getItem("toc-collapsed") === "1") nav.classList.add("collapsed");
+  sync();
+  btn.addEventListener("click", () => {
+    nav.classList.toggle("collapsed");
+    localStorage.setItem("toc-collapsed", nav.classList.contains("collapsed") ? "1" : "0");
+    sync();
   });
 })();
 

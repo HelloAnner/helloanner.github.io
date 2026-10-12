@@ -15,6 +15,7 @@ Two kinds of output:
 Requires: python3 -m pip install markdown
 """
 
+import hashlib
 import html as html_lib
 import json
 import re
@@ -42,8 +43,10 @@ KATEX_HEAD = """  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/kate
           integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
           onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>"""
 
-THEME_INIT = """  <script>/* set theme before first paint to avoid a flash */
-    if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");</script>"""
+THEME_INIT = """  <script>/* theme before first paint: manual choice wins, otherwise follow the OS theme */
+    (() => { const s = localStorage.getItem("theme");
+      if (s ? s === "dark" : matchMedia("(prefers-color-scheme: dark)").matches)
+        document.documentElement.classList.add("dark"); })();</script>"""
 
 SUN_ICON = ('<svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" '
             'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
@@ -66,9 +69,16 @@ def load_partial(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def asset_version(path: Path) -> str:
+    """Short content hash used to cache-bust static asset URLs."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:8]
+
+
 def render_homepage() -> None:
     content = (SRC / "index.template.html").read_text(encoding="utf-8")
     rendered = PARTIAL_PATTERN.sub(lambda m: load_partial(m.group(1)), content)
+    rendered = rendered.replace('href="styles.css"',
+                                f'href="styles.css?v={asset_version(SRC / "styles.css")}"')
     (OUTPUT / "index.html").write_text(rendered, encoding="utf-8")
     shutil.copy2(SRC / "styles.css", OUTPUT / "styles.css")
     print(f"Built: {OUTPUT / 'index.html'}")
@@ -153,13 +163,6 @@ def build_book_nav(book: dict, chapters: list, current: dict, sections: list) ->
         cls = ' class="current"' if ch is current else ""
         items.append(f'<li{cls}><span class="n">{ch["order"]}</span>'
                      f'<a href="{chapter_file(book, ch)}">{html_lib.escape(ch["title"])}</a></li>')
-    toc_items = "".join(
-        f'<li><span class="n">{i}</span><a href="#{sid}">{md_inline(title)}</a></li>'
-        for i, (sid, title, _) in enumerate(sections, start=1))
-    toc_html = ""
-    if toc_items:
-        toc_html = ('<hr class="rail-divider"><div class="toc-label">On This Page</div>'
-                    f'<ol id="page-toc">{toc_items}</ol>')
     return f'''<div class="book-wrap">
   <nav class="book" aria-label="Book chapters">
     <a class="backlink" href="../../index.html">← Portfolio</a>
@@ -167,9 +170,29 @@ def build_book_nav(book: dict, chapters: list, current: dict, sections: list) ->
     <p class="book-sub">{html_lib.escape(book.get("sub", ""))}</p>
     <div class="toc-label">Chapters</div>
     <ol class="chapters">{"".join(items)}</ol>
-    {toc_html}
   </nav>
+  {build_page_toc(sections)}
 </div>'''
+
+
+TOC_CHEVRON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>')
+
+
+def build_page_toc(sections: list) -> str:
+    """Right-rail on-this-page TOC; collapsible via article.js (state persisted)."""
+    if not sections:
+        return ""
+    toc_items = "".join(
+        f'<li><span class="n">{i}</span><a href="#{sid}">{md_inline(title)}</a></li>'
+        for i, (sid, title, _) in enumerate(sections, start=1))
+    return f'''<nav class="page-toc" id="page-toc-nav" aria-label="On this page">
+    <div class="toc-head">
+      <div class="toc-label">On This Page</div>
+      <button class="toc-toggle" type="button" aria-expanded="true"
+              aria-label="Collapse table of contents">{TOC_CHEVRON}</button>
+    </div>
+    <ol id="page-toc">{toc_items}</ol>
+  </nav>'''
 
 
 def build_pager(book: dict, chapters: list, idx: int) -> str:
@@ -187,10 +210,11 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>{page_title}</title>
   <meta name="description" content="{description}">
 {theme_init}
-  <link rel="stylesheet" href="../../assets/article.css">
+  <link rel="stylesheet" href="../../assets/article.css?v={css_v}">
 {katex}
 </head>
 <body>
@@ -239,7 +263,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <button id="to-top" aria-label="Back to top" title="Back to top">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6 11l6-6 6 6"/></svg>
 </button>
-<script src="../../assets/article.js"></script>
+<script src="../../assets/article.js?v={js_v}"></script>
 </body>
 </html>
 """
@@ -282,6 +306,8 @@ def render_book(book_dir: Path) -> None:
                 f'<div class="h2-title">{md_inline(title)}</div>'
                 f"{body_html}</div></section>")
         page = PAGE_TEMPLATE.format(
+            css_v=asset_version(ARTICLE / "article.css"),
+            js_v=asset_version(ARTICLE / "article.js"),
             page_title=f"{ch['title']} · {book['title']}",
             description=html_lib.escape(ch["tldr"][:150]),
             theme_init=THEME_INIT,
