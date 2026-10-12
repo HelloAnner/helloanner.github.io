@@ -233,10 +233,6 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   <div class="col">
     <div class="eyebrow title-kicker">{eyebrow}</div>
     <h1>{title}</h1>
-    <div class="tldr">
-      <div class="lab">TL;DR</div>
-      <p class="txt">{tldr}</p>
-    </div>
     <div class="byline">
       <div class="authors">Anner</div>
       <div class="affil">{book_title} &nbsp;·&nbsp; {date}</div>
