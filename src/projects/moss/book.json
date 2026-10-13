@@ -1,3 +1,4 @@
 {
-  "title": "Moss / Corevo Agent 平台"
+  "title": "Moss / Corevo Agent 平台",
+  "intro": "关于 Moss / Corevo Agent 平台的构建记录：从企业 BI 为什么需要 Agent 平台讲起，逐章深入子智能体、沙箱与文件系统，以及把内核当操作系统构建的 Agent OS 实践。"
 }

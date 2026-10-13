@@ -6,13 +6,14 @@ Two kinds of output:
 1. Homepage — src/index.template.html with {{PARTIAL:name}} placeholders
    filled from src/partials/<name>.html; src/styles.css copied as-is.
 2. Books — src/projects/<book>/ holds a book.json plus Markdown chapters
-   (NN-slug.md with YAML-ish front matter). Every chapter is rendered into
-   dist/projects/<book>/<slug>.html with the shared article module
-   (src/article/article.css + article.js), so every article on the site
-   shares exactly the same typography, spacing, light/dark theme, TOC rail,
-   code blocks, figures and math rendering.
+   (NN-slug.md with YAML-ish front matter). Every book gets a guide-style
+   index page (dist/projects/<book>/index.html, listing chapters and their
+   sections) and one page per chapter, all rendered with the shared article
+   module (src/article/article.css + article.js) — a 1:1 replica of the
+   simonwillison.net guide design system, so every article on the site shares
+   exactly the same typography, colors, light/dark theme and code rendering.
 
-Requires: python3 -m pip install markdown
+Requires: python3 -m pip install markdown pygments
 """
 
 import hashlib
@@ -33,31 +34,56 @@ OUTPUT = ROOT / "dist"
 
 PARTIAL_PATTERN = re.compile(r"\{\{PARTIAL:([a-zA-Z0-9_-]+)\}\}")
 
-MD_EXTENSIONS = ["fenced_code", "tables", "md_in_html"]
+MD_EXTENSIONS = ["fenced_code", "codehilite", "tables", "md_in_html", "toc"]
 
-KATEX_HEAD = """  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
-        integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
-          integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4xpFg" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-          integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
-          onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>"""
+THEME_INIT = """  <script>
+    (function() { // Apply theme immediately to prevent flash
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    })();
+  </script>"""
 
-THEME_INIT = """  <script>/* theme before first paint: manual choice wins, otherwise follow the OS theme */
-    (() => { const s = localStorage.getItem("theme");
-      if (s ? s === "dark" : matchMedia("(prefers-color-scheme: dark)").matches)
-        document.documentElement.classList.add("dark"); })();</script>"""
+THEME_TOGGLE = """<button id="theme-toggle" type="button" aria-label="Toggle theme">
+          <!-- Auto/System icon (default) -->
+          <svg id="icon-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2V4a8 8 0 1 0 0 16z"/></svg>
+          <!-- Light icon -->
+          <svg id="icon-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display:none"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg>
+          <!-- Dark icon -->
+          <svg id="icon-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display:none"><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></svg>
+        </button>"""
 
-SUN_ICON = ('<svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" '
-            'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-            '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line>'
-            '<line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>'
-            '<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line>'
-            '<line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>'
-            '<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>')
-MOON_ICON = ('<svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" '
-             'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-             '<path d="M21 12.79A9 9 0 0 1 11.21 3a7 7 0 1 0 9.79 9.79z"></path></svg>')
+HEAD_TEMPLATE = """<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="../../assets/avatar.png" type="image/png">
+  <title>{page_title}</title>
+  <meta name="description" content="{description}">
+{theme_init}
+  <link rel="stylesheet" href="../../assets/article.css?v={css_v}">
+</head>"""
+
+SMALLHEAD = """<div id="smallhead">
+  <div id="smallhead-inner">
+    <h1><a href="../../index.html">Anner 的作品集</a></h1>
+    <a id="smallhead-about" href="../../index.html">Portfolio</a>
+  </div>
+</div><!-- #smallhead -->"""
+
+FOOTER = """<div id="ft">
+    <ul>
+      <li>&copy;</li>
+      <li>2026</li>
+      <li><a href="../../index.html">Anner</a></li>
+      <li><a href="https://github.com/HelloAnner">GitHub</a></li>
+      <li><a href="mailto:helloanner@gmail.com">Email</a></li>
+      <li>
+        {theme_toggle}
+      </li>
+    </ul>
+</div>"""
 
 
 # ---------------------------------------------------------------- homepage
@@ -104,35 +130,14 @@ def md_render(text: str) -> str:
     return markdown.markdown(text, extensions=MD_EXTENSIONS)
 
 
-def md_inline(text: str) -> str:
-    """Render inline markdown only (strip the wrapping <p>)."""
-    out = md_render(text)
-    return re.sub(r"^<p>(.*)</p>$", r"\1", out.strip(), flags=re.S)
-
-
 def postprocess(html_text: str) -> str:
-    """Map vanilla markdown HTML onto the design-system components."""
-    # fenced code -> .codeblock card with language label + copy button
-    def codeblock(m):
-        lang = m.group(1) or "text"
-        inner = m.group(0)
-        return (f'<div class="codeblock"><span class="code-lang">{html_lib.escape(lang)}</span>'
-                f'<button class="copy-btn" type="button">Copy</button>{inner}</div>')
-    html_text = re.sub(
-        r'<pre><code class="language-([\w+-]*)">[\s\S]*?</code></pre>', codeblock, html_text)
-    html_text = re.sub(r'(<pre><code>)[\s\S]*?</code></pre>', codeblock, html_text)
-
-    # blockquote -> tight inset note
-    html_text = re.sub(r"<blockquote>([\s\S]*?)</blockquote>",
-                       r'<div class="note tight">\1</div>', html_text)
-
+    """Small component mappings on top of vanilla markdown HTML."""
     # standalone image paragraph -> figure + figcaption
     def figure(m):
         alt, src = m.group(1), m.group(2)
-        cap = f"<figcaption>{md_inline(alt)}</figcaption>" if alt else ""
+        cap = f"<figcaption>{alt}</figcaption>" if alt else ""
         return f'<figure><img src="{src}" alt="{html_lib.escape(alt)}">{cap}</figure>'
     html_text = re.sub(r'<p><img alt="([^"]*)" src="([^"]+)"\s*/></p>', figure, html_text)
-
     # tables scroll horizontally on narrow screens
     html_text = re.sub(r"(<table>[\s\S]*?</table>)",
                        r'<div class="tablewrap">\1</div>', html_text)
@@ -140,125 +145,71 @@ def postprocess(html_text: str) -> str:
 
 
 def render_chapter_body(body: str):
-    """Split on '## ' headings. Returns (intro_html, sections[(id, title, html)])."""
-    chunks = re.split(r"(?m)^## ", body)
-    intro = postprocess(md_render(chunks[0])) if chunks[0].strip() else ""
-    sections = []
-    for i, chunk in enumerate(chunks[1:], start=1):
-        title, _, rest = chunk.partition("\n")
-        title = title.strip()
-        sections.append((f"sec-{i}", title, postprocess(md_render(rest))))
-    return intro, sections
+    """Render markdown; return (html, [(h2_id, h2_text), ...]) for the index page."""
+    rendered = postprocess(md_render(body))
+    sections = [(sid, re.sub(r"<[^>]+>", "", t))
+                for sid, t in re.findall(r'<h2 id="([^"]+)">([\s\S]*?)</h2>', rendered)]
+    return rendered, sections
 
 
 # ---------------------------------------------------------------- book pages
 
-def chapter_file(book: dict, chapter: dict) -> str:
-    return "index.html" if chapter["order"] == 1 else f"{chapter['slug']}.html"
+def chapter_file(chapter: dict) -> str:
+    return f"{chapter['slug']}.html"
 
 
-def build_book_nav(book: dict, chapters: list, current: dict, sections: list) -> str:
+def sidebar(book: dict, chapters: list, current: dict | None) -> str:
+    if current is not None:
+        this_is = (f'<p class="this-is">这是项目指南 <strong><a href="./">{html_lib.escape(book["title"])}</a></strong> 中的一章。</p>')
+    else:
+        this_is = (f'<p class="this-is">Anner 的项目指南，共 {len(chapters)} 章，持续更新。</p>')
     items = []
     for ch in chapters:
-        cls = ' class="current"' if ch is current else ""
-        items.append(f'<li{cls}><span class="n">{ch["order"]}</span>'
-                     f'<a href="{chapter_file(book, ch)}">{html_lib.escape(ch["title"])}</a></li>')
-    return f'''<div class="book-wrap">
-  <nav class="book" aria-label="Book chapters">
-    <p class="book-title">{html_lib.escape(book["title"])}</p>
-    <div class="toc-label">Chapters</div>
-    <ol class="chapters">{"".join(items)}</ol>
-  </nav>
-  {build_page_toc(sections)}
-</div>'''
+        if current is not None and ch is current:
+            items.append(f'<li><strong>{html_lib.escape(ch["title"])}</strong></li>')
+        else:
+            items.append(f'<li><a href="{chapter_file(ch)}">{html_lib.escape(ch["title"])}</a></li>')
+    return f'''<div id="secondary">
+
+<div class="metabox">
+{this_is}
+<div class="series-info">
+  <p><strong>本书章节</strong></p>
+  <ol>
+    {"".join(items)}
+  </ol>
+</div>
+</div>
+
+</div> <!-- #secondary -->'''
 
 
-TOC_CHEVRON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>')
-
-
-def build_page_toc(sections: list) -> str:
-    """Right-rail on-this-page TOC; collapsible via article.js (state persisted)."""
-    if not sections:
-        return ""
-    toc_items = "".join(
-        f'<li><span class="n">{i}</span><a href="#{sid}">{md_inline(title)}</a></li>'
-        for i, (sid, title, _) in enumerate(sections, start=1))
-    return f'''<nav class="page-toc" id="page-toc-nav" aria-label="On this page">
-    <div class="toc-head">
-      <div class="toc-label">On This Page</div>
-      <button class="toc-toggle" type="button" aria-expanded="true"
-              aria-label="Collapse table of contents">{TOC_CHEVRON}</button>
-    </div>
-    <ol id="page-toc">{toc_items}</ol>
-  </nav>'''
-
-
-def build_pager(book: dict, chapters: list, idx: int) -> str:
-    prev_ch = chapters[idx - 1] if idx > 0 else None
-    next_ch = chapters[idx + 1] if idx + 1 < len(chapters) else None
-    prev_html = (f'<a href="{chapter_file(book, prev_ch)}"><span class="dir">← Previous</span>'
-                 f'<span class="name">{html_lib.escape(prev_ch["title"])}</span></a>') if prev_ch else '<span class="spacer"></span>'
-    next_html = (f'<a class="next" href="{chapter_file(book, next_ch)}"><span class="dir">Next →</span>'
-                 f'<span class="name">{html_lib.escape(next_ch["title"])}</span></a>') if next_ch else '<span class="spacer"></span>'
-    return f'<div class="col"><div class="pager">{prev_html}{next_html}</div></div>'
-
-
-PAGE_TEMPLATE = """<!DOCTYPE html>
+def page_shell(book: dict, page_title: str, description: str, primary_html: str,
+               secondary_html: str) -> str:
+    return f"""<!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <link rel="icon" href="../../assets/avatar.png" type="image/png">
-  <title>{page_title}</title>
-  <meta name="description" content="{description}">
-{theme_init}
-  <link rel="stylesheet" href="../../assets/article.css?v={css_v}">
-{katex}
-</head>
-<body>
+{HEAD_TEMPLATE.format(
+        page_title=html_lib.escape(page_title),
+        description=html_lib.escape(description[:150]),
+        theme_init=THEME_INIT,
+        css_v=asset_version(ARTICLE / "article.css"))}
+<body class="smallhead">
 
-<div class="topbar">
-  <div class="nav-container">
-    <div class="nav-links">
-      <a href="../../index.html">Home</a>
-    </div>
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-      {sun}
-      {moon}
-    </button>
-  </div>
-</div>
+{SMALLHEAD}
 
-<header class="hero">
-  <div class="col">
-    <div class="eyebrow title-kicker">{eyebrow}</div>
-    <h1>{title}</h1>
-    <div class="byline">
-      <div class="authors"><img class="avatar" src="../../assets/avatar.png" alt="Anner 的头像" width="30" height="30">Anner</div>
-      <div class="affil">{book_title} &nbsp;·&nbsp; {date}</div>
-    </div>
-  </div>
-</header>
+<div id="wrapper">
+<div id="primary">
 
-{book_nav}
+{primary_html}
 
-<main>
-{content}
-</main>
+</div> <!-- #primary -->
 
-{pager}
+{secondary_html}
+</div> <!-- #wrapper -->
 
-<div class="col">
-  <footer class="article-footer">
-    <p>© 2026 Anner · <a href="../../index.html">Portfolio</a></p>
-  </footer>
-</div>
+{FOOTER.format(theme_toggle=THEME_TOGGLE)}
 
-<button id="to-top" aria-label="Back to top" title="Back to top">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6 11l6-6 6 6"/></svg>
-</button>
-<script src="../../assets/article.js?v={js_v}"></script>
+<script src="../../assets/article.js?v={asset_version(ARTICLE / "article.js")}"></script>
 </body>
 </html>
 """
@@ -270,7 +221,6 @@ def render_book(book_dir: Path) -> None:
     out_dir = OUTPUT / "projects" / slug
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # images ship next to the chapter pages
     images = book_dir / "images"
     if images.exists():
         shutil.copytree(images, out_dir / "images", dirs_exist_ok=True)
@@ -278,48 +228,61 @@ def render_book(book_dir: Path) -> None:
     chapters = []
     for path in sorted(book_dir.glob("[0-9][0-9]-*.md")):
         meta, body = parse_front_matter(path.read_text(encoding="utf-8"))
+        content, sections = render_chapter_body(body)
         chapters.append({
             "order": int(path.name[:2]),
             "slug": path.stem[3:],
             "title": meta.get("title", path.stem[3:]),
-            "eyebrow": meta.get("eyebrow", ""),
             "tldr": meta.get("tldr", ""),
-            "date": meta.get("date", ""),
-            "body": body,
+            "content": content,
+            "sections": sections,
         })
     chapters.sort(key=lambda c: c["order"])
 
+    # ---- chapter pages ----
     for idx, ch in enumerate(chapters):
-        intro, sections = render_chapter_body(ch["body"])
-        parts = []
-        if intro:
-            parts.append(f'<section><div class="col">{intro}</div></section>')
-        for i, (sid, title, body_html) in enumerate(sections, start=1):
-            parts.append(
-                f'<section id="{sid}"><div class="col">'
-                f"<h2>Section {i}</h2>"
-                f'<div class="h2-title">{md_inline(title)}</div>'
-                f"{body_html}</div></section>")
-        page = PAGE_TEMPLATE.format(
-            css_v=asset_version(ARTICLE / "article.css"),
-            js_v=asset_version(ARTICLE / "article.js"),
-            page_title=f"{ch['title']} · {book['title']}",
-            description=html_lib.escape(ch["tldr"][:150]),
-            theme_init=THEME_INIT,
-            katex=KATEX_HEAD,
-            sun=SUN_ICON, moon=MOON_ICON,
-            eyebrow=html_lib.escape(ch["eyebrow"]),
-            title=html_lib.escape(ch["title"]),
-            tldr=md_inline(ch["tldr"]),
-            book_title=html_lib.escape(book["title"]),
-            date=html_lib.escape(ch["date"]),
-            book_nav=build_book_nav(book, chapters, ch, sections),
-            content="\n".join(parts),
-            pager=build_pager(book, chapters, idx),
-        )
-        target = out_dir / chapter_file(book, ch)
-        target.write_text(page, encoding="utf-8")
-        print(f"Built: {target}")
+        prev_ch = chapters[idx - 1] if idx > 0 else None
+        next_ch = chapters[idx + 1] if idx + 1 < len(chapters) else None
+        prev_html = (f'<div>&larr; <a href="{chapter_file(prev_ch)}">{html_lib.escape(prev_ch["title"])}</a></div>'
+                     if prev_ch else "<div></div>")
+        next_html = (f'<div><a href="{chapter_file(next_ch)}">{html_lib.escape(next_ch["title"])}</a> &rarr;</div>'
+                     if next_ch else "<div></div>")
+        primary = f'''<p style="margin-bottom: 1em"><a href="../../index.html">作品集</a> &gt; <a href="./">{html_lib.escape(book["title"])}</a></p>
+
+<h2 class="archive-h2">{html_lib.escape(ch["title"])}</h2>
+
+<div class="note">{ch["content"]}</div>
+
+<div class="pager">
+  {prev_html}
+  {next_html}
+</div>'''
+        page = page_shell(book, f"{ch['title']} · {book['title']}", ch["tldr"],
+                          primary, sidebar(book, chapters, ch))
+        (out_dir / chapter_file(ch)).write_text(page, encoding="utf-8")
+        print(f"Built: {out_dir / chapter_file(ch)}")
+
+    # ---- guide-style index page ----
+    items = []
+    for ch in chapters:
+        subs = "".join(
+            f'<li><a href="{chapter_file(ch)}#{sid}">{html_lib.escape(title)}</a></li>'
+            for sid, title in ch["sections"])
+        sub_html = f'<ul>{subs}</ul>' if subs else ""
+        items.append(f'<li><a href="{chapter_file(ch)}">{html_lib.escape(ch["title"])}</a>{sub_html}</li>')
+    primary = f'''<p style="margin-bottom: 1em"><a href="../../index.html">作品集</a> &gt; 项目指南</p>
+
+<h2 class="archive-h2">{html_lib.escape(book["title"])}</h2>
+
+<p>{html_lib.escape(book.get("intro", ""))}</p>
+
+<ol class="chapter-index">
+  {"".join(items)}
+</ol>'''
+    page = page_shell(book, book["title"], book.get("intro", ""),
+                      primary, sidebar(book, chapters, None))
+    (out_dir / "index.html").write_text(page, encoding="utf-8")
+    print(f"Built: {out_dir / 'index.html'}")
 
 
 def build() -> None:

@@ -27,7 +27,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
-        run: python -m pip install markdown
+        run: python -m pip install markdown pygments
 
       - name: Build site
         run: python build.py
