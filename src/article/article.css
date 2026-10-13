@@ -145,22 +145,21 @@ a:has(> img):link, a:has(> img):link:focus, a:has(> img):link:hover, a:has(> img
   border-bottom: none;
 }
 
-/* ---------- smallhead (thin purple bar) ---------- */
+/* ---------- smallhead (thin bar, matching the homepage's paper-and-ink look) ---------- */
 div#smallhead {
   margin-bottom: 15px;
   text-align: left;
-  background: linear-gradient(to bottom,
-    var(--color-purple-gradient-start) 0%,
-    var(--color-purple-gradient-mid) 49%,
-    var(--color-purple-gradient-end) 100%);
-  color: white;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
 }
 div#smallhead #smallhead-inner {
-  width: 940px; margin: 0 auto; padding: 4px 0;
-  color: #fff; display: flex; justify-content: space-between;
+  width: 940px; margin: 0 auto; padding: 8px 0;
+  color: var(--color-text); display: flex; justify-content: space-between;
 }
 div#smallhead #smallhead-inner h1 { font-weight: normal; font-size: 1em; }
-div#smallhead a { color: #fff; text-decoration: none; border: none; }
+div#smallhead a { color: var(--color-text); text-decoration: none; border: none; }
+div#smallhead a:hover { color: var(--color-link); }
 #smallhead-about { padding-right: 1em; }
 body.smallhead div#smallhead { margin-bottom: 0; padding: 2px 0; }
 body.smallhead div#wrapper { padding: 15px 0; }
@@ -275,12 +274,10 @@ ol.chapter-index ul li { margin-left: 2em; margin-bottom: 0.1em; }
 /* ---------- prev / next ---------- */
 .pager { margin-top: 2em; display: flex; justify-content: space-between; }
 
-/* ---------- footer (purple gradient) ---------- */
+/* ---------- footer (hairline rule, matching the homepage) ---------- */
 div#ft {
-  background: linear-gradient(to bottom,
-    var(--color-purple-gradient-start) 0%,
-    var(--color-purple-gradient-mid) 49%,
-    var(--color-purple-gradient-end) 100%);
+  background: none;
+  border-top: 1px solid var(--color-border);
   text-align: center;
   margin: 15px 0 0.4em 0;
   padding: 10px 0;
@@ -288,14 +285,15 @@ div#ft {
   font-size: 0.85em;
   margin-top: auto;
 }
-div#ft ul, div#ft li { display: inline; padding-right: 1em; color: #fff; }
-div#ft a { color: #fff; text-decoration: none; border-bottom: none; }
+div#ft ul, div#ft li { display: inline; padding-right: 1em; color: var(--color-text-muted); }
+div#ft a { color: var(--color-text-muted); text-decoration: none; border-bottom: none; }
+div#ft a:hover { color: var(--color-link); }
 body.smallhead div#ft { margin-top: 0; }
 
 /* Theme toggle button (cycles auto -> light -> dark) */
 #theme-toggle {
   background: none; border: none; cursor: pointer; padding: 0 0.5em;
-  color: white; opacity: 0.8; transition: opacity 0.2s;
+  color: var(--color-text-muted); opacity: 0.8; transition: opacity 0.2s;
   vertical-align: middle; display: inline-flex; align-items: center;
 }
 #theme-toggle:hover { opacity: 1; }
