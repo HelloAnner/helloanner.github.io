@@ -209,6 +209,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="../../assets/avatar.png" type="image/png">
   <title>{page_title}</title>
   <meta name="description" content="{description}">
 {theme_init}
@@ -234,7 +235,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     <div class="eyebrow title-kicker">{eyebrow}</div>
     <h1>{title}</h1>
     <div class="byline">
-      <div class="authors">Anner</div>
+      <div class="authors"><img class="avatar" src="../../assets/avatar.png" alt="Anner 的头像" width="30" height="30">Anner</div>
       <div class="affil">{book_title} &nbsp;·&nbsp; {date}</div>
     </div>
   </div>
@@ -325,11 +326,16 @@ def build() -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     render_homepage()
 
-    # shared article module assets
+    # shared article module + site assets (avatar, …)
     assets = OUTPUT / "assets"
     assets.mkdir(exist_ok=True)
     shutil.copy2(ARTICLE / "article.css", assets / "article.css")
     shutil.copy2(ARTICLE / "article.js", assets / "article.js")
+    shared_assets = SRC / "assets"
+    if shared_assets.exists():
+        for asset in shared_assets.iterdir():
+            if asset.is_file():
+                shutil.copy2(asset, assets / asset.name)
 
     if PROJECTS.exists():
         for book_dir in sorted(p for p in PROJECTS.iterdir() if p.is_dir()):
